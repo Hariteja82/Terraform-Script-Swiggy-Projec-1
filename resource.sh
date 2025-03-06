@@ -16,20 +16,7 @@ sudo systemctl enable docker
 sudo systemctl start docker
 docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
 docker run -d -p 8081:8081 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
-
-#install tomcat
-sudo yum update -y
-yum install git -y
-sudo yum install java-17-amazon-corretto --y
-git clone https://github.com/Hariteja82/tomcat-Dockerfile.git
-wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.100/bin/apache-tomcat-9.0.100.tar.gz
-tar -zxvf apache-tomcat-9.0.100.tar.gz
-mv apache-tomcat-9.0.100 tomcat
-mv /root/tomcat-Dockerfile/host/context.xml /root/tomcat/webapps/host-manager/META-INF/context.xml
-mv /root/tomcat-Dockerfile/manager/context.xml /root/tomcat/webapps/manager/META-INF/context.xml
-mv /root/tomcat-Dockerfile/tomcat-users.xml  /root/tomcat/conf/tomcat-users.xml
-cd /usr/local/tomcat/bin/
-./startup.sh
+docker run -itd -p 8080:8080 --name tomcat hariteja82/tomcat:1
 
 # install trivy
 sudo apt-get install wget apt-transport-https gnupg lsb-release -y
