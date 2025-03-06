@@ -18,6 +18,7 @@ sudo systemctl start docker
 #install tomcat
 sudo yum update -y
 yum install git -y
+sudo yum install java-17-amazon-corretto --y
 git clone https://github.com/Hariteja82/tomcat-Dockerfile.git
 wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.100/bin/apache-tomcat-9.0.100.tar.gz
 tar -zxvf apache-tomcat-9.0.100.tar.gz
