@@ -19,13 +19,12 @@ sudo systemctl start docker
 sudo yum update -y
 yum install git -y
 git clone https://github.com/Hariteja82/tomcat-Dockerfile.git
-cd /usr/local/
 wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.100/bin/apache-tomcat-9.0.100.tar.gz
 tar -zxvf apache-tomcat-9.0.100.tar.gz
 mv apache-tomcat-9.0.100 tomcat
-mv /root/tomcat-Dockerfile/host/context.xml /usr/local/tomcat/webapps/host-manager/META-INF/context.xml
-mv /root/tomcat-Dockerfile/manager/context.xml /usr/local/tomcat/webapps/manager/META-INF/context.xml
-mv /root/tomcat-Dockerfile/tomcat-users.xml  /usr/local/tomcat/conf/tomcat-users.xml
+mv /root/tomcat-Dockerfile/host/context.xml /root/tomcat/webapps/host-manager/META-INF/context.xml
+mv /root/tomcat-Dockerfile/manager/context.xml /root/tomcat/webapps/manager/META-INF/context.xml
+mv /root/tomcat-Dockerfile/tomcat-users.xml  /root/tomcat/conf/tomcat-users.xml
 cd /usr/local/tomcat/bin/
 ./startup.sh
 
