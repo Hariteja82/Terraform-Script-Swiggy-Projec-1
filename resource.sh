@@ -14,6 +14,8 @@ yum install git -y
 yum install docker -y
 sudo systemctl enable docker
 sudo systemctl start docker
+docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+docker run -d -p 8081:8081 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
 
 #install tomcat
 sudo yum update -y
