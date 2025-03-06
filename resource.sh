@@ -1,24 +1,65 @@
 #!/bin/bash
-sudo apt update -y
-wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
-echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
-sudo apt update -y
-sudo apt install temurin-17-jdk -y
-/usr/bin/java --version
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
-sudo apt-get update -y
-sudo apt-get install jenkins -y
+sudo yum update -y
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.keysudo 
+sudo yum update -y
+sudo yum install java-17-amazon-corretto -y
+sudo yum install jenkins -y
+sudo systemctl enable jenkins
 sudo systemctl start jenkins
-sudo systemctl status jenkins
 
 #install docker
-sudo apt-get update
-sudo apt-get install docker.io -y
-sudo usermod -aG docker ubuntu  
-newgrp docker
-sudo chmod 777 /var/run/docker.sock
-docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+sudo yum update -y
+yum install git -y
+yum install docker -y
+sudo systemctl enable docker
+sudo systemctl start docker
+
+#install tomcat
+
+
+#install Nexus
+sudo yum update -y
+sudo yum install wget -y
+sudo yum install java-1.8.0-openjdk.x86_64 -y
+sudo mkdir /app && cd /app
+sudo wget -O nexus.tar.gz https://download.sonatype.com/nexus/3/latest-unix.tar.gz
+ll
+sudo tar -xvf nexus.tar.gz
+ll
+sudo mv nexus-3* nexus
+sudo adduser nexus
+sudo chown -R nexus:nexus /app/nexus
+sudo chown -R nexus:nexus /app/sonatype-work
+sudo vi  /app/nexus/bin/nexus.rc (remove # and add nexus)
+
+run_as_user="nexus"
+
+  
+sudo vi /etc/systemd/system/nexus.service		
+
+[Unit]
+Description=nexus service
+After=network.target
+
+[Service]
+Type=forking
+LimitNOFILE=65536
+User=nexus
+Group=nexus
+ExecStart=/app/nexus/bin/nexus start
+ExecStop=/app/nexus/bin/nexus stop
+User=nexus
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+
+sudo chkconfig nexus on
+sudo systemctl start nexus
+systemctl status nexus.service 
+sudo systemctl enable nexus
+systemctl status nexus.service
 
 # install trivy
 sudo apt-get install wget apt-transport-https gnupg lsb-release -y
