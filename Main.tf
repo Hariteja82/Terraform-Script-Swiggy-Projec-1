@@ -4,7 +4,7 @@ resource "aws_security_group" "Project-SG" {
 
   # Define a single ingress rule to allow traffic on all specified ports
   ingress = [
-    for port in [22, 80, 443, 8080, 9000, 3000] : {
+    for port in [22, 80, 443, 8080, 9000, 3000, 4545] : {
       description      = "TLS from VPC"
       from_port        = port
       to_port          = port
